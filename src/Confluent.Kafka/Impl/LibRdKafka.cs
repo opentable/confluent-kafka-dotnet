@@ -966,26 +966,8 @@ namespace Confluent.Kafka.Impl
         private static Func<IntPtr, IntPtr, ErrorCode> _position;
         internal static ErrorCode position(IntPtr rk, IntPtr partitions)
             => _position(rk, partitions);
-
-        /// <summary>
-        ///     Var-arg tag types, used in producev
-        /// </summary>
-        internal enum ProduceVarTag
-        {
-            End,       // va-arg sentinel
-            Topic,     // (const char *) Topic name
-            Rkt,       // (rd_kafka_topic_t *) Topic handle
-            Partition, // (int32_t) Partition
-            Value,     // (void *, size_t) Message value (payload)
-            Key,       // (void *, size_t) Message key
-            Opaque,    // (void *) Application opaque
-            MsgFlags,  // (int) RD_KAFKA_MSG_F_.. flags
-            Timestamp, // (int64_t) Milliseconds since epoch UTC
-            Header,    // (const char *, const void *, ssize_t) Message Header
-            Headers,   // (rd_kafka_headers_t *) Headers list
-        }
-
-        private delegate ErrorCode Produceva(IntPtr rk,
+        
+        private delegate IntPtr Produceva(IntPtr rk,
             [In, Out] rd_kafka_vu[] vus,
             IntPtr size);
         
@@ -1014,15 +996,17 @@ namespace Confluent.Kafka.Impl
                 new() {vt = rd_kafka_vtype.Headers,   headers = headers},
                 new() {vt = rd_kafka_vtype.Opaque,    opaque = msg_opaque},
             };
+            var res = _produceva(rk,
+                vus,
+                (IntPtr) vus.Length);
             try
             {
-                return _produceva(rk,
-                    vus,
-                    new IntPtr(vus.Length));
+                return (ErrorCode) Marshal.ReadInt32(res);
             }
             finally
             {
                 Marshal.FreeHGlobal(topicStrPtr);
+                Marshal.FreeHGlobal(res);
             }
         }
         /*
