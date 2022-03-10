@@ -122,25 +122,25 @@ namespace Confluent.Kafka.Impl
         /// <summary>
         /// Topic
         /// </summary>
-        [FieldOffset(8)]
+        [FieldOffset(sizeof(rd_kafka_vtype))]
         public IntPtr topic;
         
-        [FieldOffset(8)]
+        [FieldOffset(sizeof(rd_kafka_vtype))]
         public rd_kafka_key_val key;
 
-        [FieldOffset(8)]
+        [FieldOffset(sizeof(rd_kafka_vtype))]
         public rd_kafka_key_val val;
 
-        [FieldOffset(8)]
+        [FieldOffset(sizeof(rd_kafka_vtype))]
         public IntPtr opaque;
 
-        [FieldOffset(8)] 
+        [FieldOffset(sizeof(rd_kafka_vtype))] 
         public IntPtr msgflags;
 
-        [FieldOffset(8)] 
+        [FieldOffset(sizeof(rd_kafka_vtype))] 
         public long timestamp;
 
-        [FieldOffset(8)] 
+        [FieldOffset(sizeof(rd_kafka_vtype))] 
         public IntPtr headers;
 
     };
