@@ -230,7 +230,7 @@ namespace Confluent.Kafka.Impl
             _resume_partitions = (Func<IntPtr, IntPtr, ErrorCode>)methods.Single(m => m.Name == "rd_kafka_resume_partitions").CreateDelegate(typeof(Func<IntPtr, IntPtr, ErrorCode>));
             _seek = (Func<IntPtr, int, long, IntPtr, ErrorCode>)methods.Single(m => m.Name == "rd_kafka_seek").CreateDelegate(typeof(Func<IntPtr, int, long, IntPtr, ErrorCode>));
             _position = (Func<IntPtr, IntPtr, ErrorCode>)methods.Single(m => m.Name == "rd_kafka_position").CreateDelegate(typeof(Func<IntPtr, IntPtr, ErrorCode>));
-            _producev = (Producev)methods.Single(m => m.Name == "rd_kafka_producev").CreateDelegate(typeof(Producev));
+            _produceva = (Produceva)methods.Single(m => m.Name == "rd_kafka_produceva").CreateDelegate(typeof(Produceva));
             _flush = (Flush)methods.Single(m => m.Name == "rd_kafka_flush").CreateDelegate(typeof(Flush));
             _metadata = (Metadata)methods.Single(m => m.Name == "rd_kafka_metadata").CreateDelegate(typeof(Metadata));
             _metadata_destroy = (Action<IntPtr>)methods.Single(m => m.Name == "rd_kafka_metadata_destroy").CreateDelegate(typeof(Action<IntPtr>));
@@ -985,28 +985,26 @@ namespace Confluent.Kafka.Impl
             Headers,   // (rd_kafka_headers_t *) Headers list
         }
 
-        private delegate ErrorCode Producev(IntPtr rk,
-                ProduceVarTag topicTag, string topic,
-                ProduceVarTag partitionTag, int partition,
-                ProduceVarTag vaTag, IntPtr val, UIntPtr len,
-                ProduceVarTag keyTag, IntPtr key, UIntPtr keylen,
-                ProduceVarTag msgflagsTag, IntPtr msgflags,
-                ProduceVarTag msg_opaqueTag, IntPtr msg_opaque,
-                ProduceVarTag timestampTag, long timestamp,
-                ProduceVarTag headersTag, IntPtr headers,
-                ProduceVarTag endTag);
-        private static Producev _producev;
+        private delegate ErrorCode Produceva(IntPtr rk,
+            IntPtr vus,
+            UIntPtr size);
+        
+        private static Produceva _produceva;
+
         internal static ErrorCode producev(
-                IntPtr rk,
-                string topic,
-                int partition,
-                IntPtr msgflags,
-                IntPtr val, UIntPtr len,
-                IntPtr key, UIntPtr keylen,
-                long timestamp,
-                IntPtr headers,
-                IntPtr msg_opaque)
-            => _producev(rk,
+            IntPtr rk,
+            string topic,
+            int partition,
+            IntPtr msgflags,
+            IntPtr val, UIntPtr len,
+            IntPtr key, UIntPtr keylen,
+            long timestamp,
+            IntPtr headers,
+            IntPtr msg_opaque)
+            => _produceva(rk,
+                Marshal.StructureToPtr(),
+                10);
+        /*
                     ProduceVarTag.Topic, topic,
                     ProduceVarTag.Partition, partition,
                     ProduceVarTag.Value, val, len,
@@ -1016,6 +1014,7 @@ namespace Confluent.Kafka.Impl
                     ProduceVarTag.Timestamp, timestamp,
                     ProduceVarTag.Headers, headers,
                     ProduceVarTag.End);
+                    */
 
         private delegate ErrorCode Flush(IntPtr rk, IntPtr timeout_ms);
         private static Flush _flush;

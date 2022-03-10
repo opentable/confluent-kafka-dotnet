@@ -14,11 +14,11 @@
     <Title>Confluent.SchemaRegistry</Title>
     <AssemblyName>Confluent.SchemaRegistry</AssemblyName>
     <VersionPrefix>1.8.2</VersionPrefix>
-    <TargetFrameworks>netstandard1.4;netstandard2.0</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Confluent.SchemaRegistry.snk</AssemblyOriginatorKeyFile>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>

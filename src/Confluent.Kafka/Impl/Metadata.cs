@@ -90,4 +90,58 @@ namespace Confluent.Kafka.Impl
         internal IntPtr groups;
         internal int group_cnt;
     };
+    
+    enum rd_kafka_vtype
+    {
+        End,       // va-arg sentinel
+        Topic,     // (const char *) Topic name
+        Rkt,       // (rd_kafka_topic_t *) Topic handle
+        Partition, // (int32_t) Partition
+        Value,     // (void *, size_t) Message value (payload)
+        Key,       // (void *, size_t) Message key
+        Opaque,    // (void *) Application opaque
+        MsgFlags,  // (int) RD_KAFKA_MSG_F_.. flags
+        Timestamp, // (int64_t) Milliseconds since epoch UTC
+        Header,    // (const char *, const void *, ssize_t) Message Header
+        Headers,   // (rd_kafka_headers_t *) Headers list
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    struct rd_kafka_key_val
+    {
+        private IntPtr data;
+        private UIntPtr size;
+    }
+    
+    [StructLayout(LayoutKind.Sequential)]
+    struct rd_kafka_vu_
+    {
+        [FieldOffset(0)]
+        public rd_kafka_vtype vt;
+        
+        /// <summary>
+        /// Topic
+        /// </summary>
+        [FieldOffset(8)]
+        public IntPtr topic;
+        
+        [FieldOffset(8)]
+        public rd_kafka_key_val key;
+
+        [FieldOffset(8)]
+        public rd_kafka_key_val val;
+
+        [FieldOffset(8)]
+        public IntPtr opaque;
+
+        [FieldOffset(8)] 
+        public IntPtr msgflags;
+
+        [FieldOffset(8)] 
+        public long timestamp;
+
+        [FieldOffset(8)] 
+        public IntPtr headers;
+
+    };
 }
