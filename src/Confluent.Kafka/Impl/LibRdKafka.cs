@@ -986,8 +986,8 @@ namespace Confluent.Kafka.Impl
         }
 
         private delegate ErrorCode Produceva(IntPtr rk,
-            IntPtr vus,
-            UIntPtr size);
+            [In, Out] rd_kafka_vu[] vus,
+            IntPtr size);
         
         private static Produceva _produceva;
 
@@ -1001,9 +1001,30 @@ namespace Confluent.Kafka.Impl
             long timestamp,
             IntPtr headers,
             IntPtr msg_opaque)
-            => _produceva(rk,
-                Marshal.StructureToPtr(),
-                10);
+        {
+            IntPtr topicStrPtr = Marshal.StringToHGlobalUni(topic);
+            rd_kafka_vu[] vus =
+            {
+                new() {vt = rd_kafka_vtype.Topic,     topic = topicStrPtr},
+                new() {vt = rd_kafka_vtype.Partition, partition = partition},
+                new() {vt = rd_kafka_vtype.MsgFlags,  msgflags = msgflags},
+                new() {vt = rd_kafka_vtype.Value,     val = new rd_kafka_key_val() {data = val, size = len}},
+                new() {vt = rd_kafka_vtype.Key,       val = new rd_kafka_key_val() {data = key, size = keylen}},
+                new() {vt = rd_kafka_vtype.Timestamp, timestamp = timestamp},
+                new() {vt = rd_kafka_vtype.Headers,   headers = headers},
+                new() {vt = rd_kafka_vtype.Opaque,    opaque = msg_opaque},
+            };
+            try
+            {
+                return _produceva(rk,
+                    vus,
+                    new IntPtr(vus.Length));
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(topicStrPtr);
+            }
+        }
         /*
                     ProduceVarTag.Topic, topic,
                     ProduceVarTag.Partition, partition,

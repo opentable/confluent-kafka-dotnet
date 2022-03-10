@@ -109,39 +109,45 @@ namespace Confluent.Kafka.Impl
     [StructLayout(LayoutKind.Sequential)]
     struct rd_kafka_key_val
     {
-        private IntPtr data;
-        private UIntPtr size;
+        public IntPtr data;
+        public UIntPtr size;
     }
     
     [StructLayout(LayoutKind.Sequential)]
-    struct rd_kafka_vu_
+    struct rd_kafka_topic
+    {
+        [MarshalAs(UnmanagedType.LPUTF8Str)]
+        public String topic;
+    }
+    
+    [StructLayout(LayoutKind.Explicit)]
+    struct rd_kafka_vu
     {
         [FieldOffset(0)]
         public rd_kafka_vtype vt;
         
-        /// <summary>
-        /// Topic
-        /// </summary>
-        [FieldOffset(sizeof(rd_kafka_vtype))]
+        [FieldOffset(8)]
         public IntPtr topic;
-        
-        [FieldOffset(sizeof(rd_kafka_vtype))]
+
+        [FieldOffset(8)]
+        public int partition;
+
+        [FieldOffset(8)]
         public rd_kafka_key_val key;
 
-        [FieldOffset(sizeof(rd_kafka_vtype))]
+        [FieldOffset(8)]
         public rd_kafka_key_val val;
 
-        [FieldOffset(sizeof(rd_kafka_vtype))]
+        [FieldOffset(8)]
         public IntPtr opaque;
 
-        [FieldOffset(sizeof(rd_kafka_vtype))] 
+        [FieldOffset(8)]
         public IntPtr msgflags;
 
-        [FieldOffset(sizeof(rd_kafka_vtype))] 
+        [FieldOffset(8)]
         public long timestamp;
 
-        [FieldOffset(sizeof(rd_kafka_vtype))] 
+        [FieldOffset(8)]
         public IntPtr headers;
-
     };
 }
