@@ -984,7 +984,7 @@ namespace Confluent.Kafka.Impl
             IntPtr headers,
             IntPtr msg_opaque)
         {
-            IntPtr topicStrPtr = Marshal.StringToHGlobalUni(topic);
+            IntPtr topicStrPtr = Marshal.StringToCoTaskMemUTF8(topic);
             rd_kafka_vu[] vus =
             {
                 new() {vt = rd_kafka_vtype.Topic,     topic = topicStrPtr},
