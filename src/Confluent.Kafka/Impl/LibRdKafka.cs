@@ -968,8 +968,8 @@ namespace Confluent.Kafka.Impl
             => _position(rk, partitions);
         
         private delegate IntPtr Produceva(IntPtr rk,
-            [In, Out] rd_kafka_vu[] vus,
-            IntPtr size);
+            rd_kafka_vu[] vus,
+            nint size);
         
         private static Produceva _produceva;
 
@@ -998,10 +998,10 @@ namespace Confluent.Kafka.Impl
             };
             var res = _produceva(rk,
                 vus,
-                (IntPtr) vus.Length);
+                vus.Length);
             try
             {
-                return (ErrorCode) Marshal.ReadInt32(res);
+                return new Error(res).Code;
             }
             finally
             {

@@ -412,8 +412,8 @@ namespace Confluent.Kafka.Impl.NativeMethods
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr rd_kafka_produceva(
                 IntPtr rk,
-                [In, Out] rd_kafka_vu[] vus,
-                IntPtr size);
+                rd_kafka_vu[] vus,
+                nint size);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern ErrorCode rd_kafka_flush(

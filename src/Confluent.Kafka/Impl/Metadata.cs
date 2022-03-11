@@ -120,7 +120,7 @@ namespace Confluent.Kafka.Impl
         public String topic;
     }
     
-    [StructLayout(LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Explicit, Size = 72)]
     struct rd_kafka_vu
     {
         [FieldOffset(0)]
