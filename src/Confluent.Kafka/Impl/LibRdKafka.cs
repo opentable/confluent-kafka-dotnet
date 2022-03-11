@@ -987,14 +987,14 @@ namespace Confluent.Kafka.Impl
             IntPtr topicStrPtr = Marshal.StringToCoTaskMemUTF8(topic);
             rd_kafka_vu[] vus =
             {
-                new() {vt = rd_kafka_vtype.Topic,     topic = topicStrPtr},
-                new() {vt = rd_kafka_vtype.Partition, partition = partition},
-                new() {vt = rd_kafka_vtype.MsgFlags,  msgflags = msgflags},
-                new() {vt = rd_kafka_vtype.Value,     val = new rd_kafka_key_val() {data = val, size = len}},
-                new() {vt = rd_kafka_vtype.Key,       val = new rd_kafka_key_val() {data = key, size = keylen}},
-                new() {vt = rd_kafka_vtype.Timestamp, timestamp = timestamp},
-                new() {vt = rd_kafka_vtype.Headers,   headers = headers},
-                new() {vt = rd_kafka_vtype.Opaque,    opaque = msg_opaque},
+                new() {vt = rd_kafka_vtype.Topic,     data  = new rd_kafka_vu_data() {topic = topicStrPtr}},
+                new() {vt = rd_kafka_vtype.Partition, data  = new rd_kafka_vu_data() {partition = partition}},
+                new() {vt = rd_kafka_vtype.MsgFlags,  data  = new rd_kafka_vu_data() {msgflags = msgflags}},
+                new() {vt = rd_kafka_vtype.Value,     data  = new rd_kafka_vu_data() {val = new rd_kafka_key_val() {data = val, size = len}}},
+                new() {vt = rd_kafka_vtype.Key,       data  = new rd_kafka_vu_data() {val = new rd_kafka_key_val() {data = key, size = keylen}}},
+                new() {vt = rd_kafka_vtype.Timestamp, data  = new rd_kafka_vu_data() {timestamp = timestamp}},
+                new() {vt = rd_kafka_vtype.Headers,   data  = new rd_kafka_vu_data() {headers = headers}},
+                new() {vt = rd_kafka_vtype.Opaque,    data  = new rd_kafka_vu_data() {opaque = msg_opaque}},
             };
             try
             {

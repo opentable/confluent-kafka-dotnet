@@ -113,41 +113,38 @@ namespace Confluent.Kafka.Impl
         public UIntPtr size;
     }
     
-    [StructLayout(LayoutKind.Sequential)]
-    struct rd_kafka_topic
-    {
-        [MarshalAs(UnmanagedType.LPUTF8Str)]
-        public String topic;
-    }
-    
-    [StructLayout(LayoutKind.Explicit, Size = 72)]
-    struct rd_kafka_vu
+    [StructLayout(LayoutKind.Explicit, Size = 64)]
+    struct rd_kafka_vu_data
     {
         [FieldOffset(0)]
-        public rd_kafka_vtype vt;
-        
-        [FieldOffset(8)]
         public IntPtr topic;
 
-        [FieldOffset(8)]
+        [FieldOffset(0)]
         public int partition;
 
-        [FieldOffset(8)]
+        [FieldOffset(0)]
         public rd_kafka_key_val key;
 
-        [FieldOffset(8)]
+        [FieldOffset(0)]
         public rd_kafka_key_val val;
 
-        [FieldOffset(8)]
+        [FieldOffset(0)]
         public IntPtr opaque;
 
-        [FieldOffset(8)]
+        [FieldOffset(0)]
         public IntPtr msgflags;
 
-        [FieldOffset(8)]
+        [FieldOffset(0)]
         public long timestamp;
 
-        [FieldOffset(8)]
+        [FieldOffset(0)]
         public IntPtr headers;
+    }
+    
+    [StructLayout(LayoutKind.Sequential)]
+    struct rd_kafka_vu
+    {
+        public rd_kafka_vtype vt;
+        public rd_kafka_vu_data data;
     };
 }
