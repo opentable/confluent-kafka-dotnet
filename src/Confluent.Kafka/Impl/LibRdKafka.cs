@@ -996,31 +996,18 @@ namespace Confluent.Kafka.Impl
                 new() {vt = rd_kafka_vtype.Headers,   headers = headers},
                 new() {vt = rd_kafka_vtype.Opaque,    opaque = msg_opaque},
             };
-            var res = _produceva(rk,
-                vus,
-                vus.Length);
             try
             {
-                return new Error(res).Code;
+                return new Error(_produceva(rk,
+                    vus,
+                    vus.Length)).Code;
             }
             finally
             {
                 Marshal.FreeHGlobal(topicStrPtr);
-                Marshal.FreeHGlobal(res);
             }
         }
-        /*
-                    ProduceVarTag.Topic, topic,
-                    ProduceVarTag.Partition, partition,
-                    ProduceVarTag.Value, val, len,
-                    ProduceVarTag.Key, key, keylen,
-                    ProduceVarTag.Opaque, msg_opaque,
-                    ProduceVarTag.MsgFlags, msgflags,
-                    ProduceVarTag.Timestamp, timestamp,
-                    ProduceVarTag.Headers, headers,
-                    ProduceVarTag.End);
-                    */
-
+        
         private delegate ErrorCode Flush(IntPtr rk, IntPtr timeout_ms);
         private static Flush _flush;
         internal static ErrorCode flush(IntPtr rk, IntPtr timeout_ms)
